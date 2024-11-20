@@ -28,36 +28,56 @@ function loadEmployeesFromLocalStorage() {
 // Ensure the function is correctly defined and attached to the event listener
 // Function to add a new employee
 function addEmployee() {
-    console.log("Add Employee function called"); // Add console log for debugging
+    console.log("Add Employee function called"); // Debug log
 
-    // Use prompt for all other fields
+    // Use prompt for other fields
     const firstName = prompt("Введіть ім'я:");
     const lastName = prompt("Введіть прізвище:");
     const department = prompt("Введіть відділ:");
     const position = prompt("Введіть посаду:");
-    
-    // Create a date input element for hireDate
+
+    // Select a predefined container or create one if not present
+    let dateContainer = document.getElementById('dateInputContainer');
+    if (!dateContainer) {
+        dateContainer = document.createElement('div');
+        dateContainer.id = 'dateInputContainer';
+        dateContainer.style.marginTop = '10px';
+        dateContainer.style.textAlign = 'center'; // Optional: Style for centering
+        document.body.insertBefore(dateContainer, document.body.firstChild); // Add container at the top
+    }
+
+    // Create the date input element
     const hireDateInput = document.createElement('input');
     hireDateInput.type = 'date'; // Set type to 'date'
-    document.body.appendChild(hireDateInput); // Append the input field to the page temporarily
+    hireDateInput.id = 'hireDateInput'; // Optional: Assign an ID
+    hireDateInput.style.margin = '10px'; // Add some margin for spacing
 
-    // Ask the user to select a hire date
-    hireDateInput.click(); // Trigger the date picker (optional, based on browser behavior)
+    // Add a label for better UI
+    const label = document.createElement('label');
+    label.for = 'hireDateInput';
+    label.textContent = "Оберіть дату прийняття на роботу: ";
+    label.style.display = 'block';
 
+    // Clear the container and append the input field and label
+    dateContainer.innerHTML = ''; // Clear previous content
+    dateContainer.appendChild(label);
+    dateContainer.appendChild(hireDateInput);
+
+    // Wait for the user to select a date
     hireDateInput.addEventListener('change', () => {
         const hireDate = hireDateInput.value; // Get the selected date value
 
-        console.log("Input values:", { firstName, lastName, department, position, hireDate }); // Log input values
+        console.log("Input values:", { firstName, lastName, department, position, hireDate }); // Debug log
 
         // Check if all fields are filled
         if (firstName && lastName && department && position && hireDate) {
             // Add the new employee with the selected hireDate
-            employees.push({ 
-                firstName, 
-                lastName, 
-                department, 
-                position, 
-                hireDate 
+            employees.push({
+                firstName,
+                lastName,
+                department,
+                position,
+                hireDate,
             });
 
             console.log("Employee added:", employees[employees.length - 1]); // Log the added employee
@@ -72,14 +92,17 @@ function addEmployee() {
             if (document.getElementById('departmentStats')) {
                 renderDepartmentStats();
             }
+
+            // Clear the date container after successful addition
+            dateContainer.innerHTML = '';
         } else {
-            console.warn("All fields must be filled"); // Use console.warn for better visibility
+            console.warn("All fields must be filled"); // Better visibility for warnings
             alert("Всі поля мають бути заповнені!");
         }
-
-        // Remove the temporary date input element
-        document.body.removeChild(hireDateInput);
     });
+
+    // Automatically focus on the date input
+    hireDateInput.focus();
 }
 
 
